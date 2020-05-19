@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 步骤拆解
+        1. 拿到模板
+        2. 拿到数据
+        3. 将模板与数据结合，得到html
+        4. 渲染html
+     -->
+    <div id="app">
+        <p>{{ name }}</p>
+        <p>{{ message }}</p>
+    </div>
+    <script>
+        let getBrace = /\{\{(.+?)\}\}/g;
+        let tmpNode = document.querySelector('#app');
+        let data = {
+            name: '一个新name',
+            message: '一个消息'
+        };
+        // 2.
+        // 暂时使用递归实现填充数据
+        // 这里template是DOM，vue中实际上是DOM——>字符串——>VNode——>真正的DOM
+        function conpiler(template, data) {
+            let childNodes = template.childNodes // 取出子元素
+            for (let i = 0; i < childNodes.length; i++) {
+                if (childNodes[i].nodeType === 3) { // 3代表文本节点
+                    // 判断是否需要插值{{}} 
+                    let txt = childNodes[i].nodeValue;
+                    txt = txt.replace(getBrace, function(_, g) {
+                        let key = g.trim();
+                        let value = data[key];
+                        console.log(value)
+                        return value;
+                    })
+                    console.log(txt)
+                    childNodes[i].nodeValue = txt;
+                } else if (childNodes[i].nodeType === 1) { // 1代表元素节点
+                    // 进行递归处理
+                    conpiler(childNodes[i], data)
+                }
+            }
+        }
+        // 3.
+        let generateNode = tmpNode.cloneNode(true)
+        console.log(tmpNode)
+        conpiler(generateNode, data)
+        console.log(generateNode) // 注意tmpNode是引用类型
+            // 4.
+        app.parentNode.replaceChild(generateNode, app)
+            // 上述解决方法的问题
+            // 1.Vue使用的虚拟DOM
+            // 2.只考虑了{{name}}，未考虑{{child.first.name}}
+            // 3.代码没有整合
+    </script>
+</body>
+
+</html>

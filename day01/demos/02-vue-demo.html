@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+    <div id="app">
+        <p>{{ name }}</p>
+        <p>{{ message }}</p>
+    </div>
+
+    <script>
+        //创建Vue实例,得到 ViewModel
+        console.log(app) //打印模板
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                name: '张三',
+                message: '是个男的'
+            },
+            methods: {}
+        });
+        console.log(app) //打印替换后的HTML
+    </script>
+</body>
+
+</html>
